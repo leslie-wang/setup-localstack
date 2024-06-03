@@ -10,8 +10,12 @@ jobs:
   localstack-action-test:
     name: 'Test LocalStack GitHub Action'
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:latest
     steps:
       - uses: actions/checkout@v3
+
+      - run: apt update && apt install -y python3-pip docker-ce
 
       - name: Start LocalStack
         uses: ./
@@ -22,6 +26,7 @@ jobs:
           use-pro: 'true'
         env:
           LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
+          PIP_BREAK_SYSTEM_PACKAGES: 1
 
       - name: Run Tests against LocalStack
         run: |
@@ -32,9 +37,13 @@ jobs:
   cloud-pods-test:
     name: 'Test Cloud Pods Action'
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:latest
     steps:
       - name: ⚡️ Checkout the repository
         uses: actions/checkout@v3
+
+      - run: apt update && apt install -y python3-pip docker-ce
 
       - name: Start LocalStack
         uses: ./
@@ -44,6 +53,7 @@ jobs:
           use-pro: 'true'
         env:
           LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
+          PIP_BREAK_SYSTEM_PACKAGES: 1
 
       - name: Run AWS commands
         run: |
